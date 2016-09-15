@@ -1,0 +1,1198 @@
+---
+swagger: "2.0"
+info:
+  description: "Onboarding API Specifications"
+  version: "1.0.0"
+  title: "Onboarding API"
+host: "localhost:8080"
+basePath: "/v1"
+schemes:
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /workflows/psp-nzd/applications:
+    get:
+      tags:
+      - "Credit Card Payments (PSP NZD)"
+      description: "Retrieves all New Zealand PSP applications referenced by the given\
+        \ criteria in the url. A search criteria can be a combination of the following:\n\
+        \   - state={state}\n    - *Accepted values are \"in_progress\", \"in_review\"\
+        , \"approved\" and \"rejected\"*\n   - created_before={date}\n   - created_after={date}\n\
+        \   - updated_before={date}\n   - updated_after={date}\n\nDocuments file data\
+        \ will be excluded to limit the amount of data on the wire.\n"
+      operationId: "getPspNzdApplications"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "Application(s) retrieved"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/PspNzdApplication"
+        400:
+          description: "Invalid request"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Error"
+        404:
+          description: "Applications not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - api_key: []
+      x-swagger-router-controller: "CreditCardPaymentsPSPNZD"
+    post:
+      tags:
+      - "Credit Card Payments (PSP NZD)"
+      description: "Creates a new New Zealand PSP application. The status of the application\
+        \ will be returned in the status object. A Location header that points to\
+        \ the URL of the new resource will be available in the response. The Location\
+        \ header has an application ID that should be used for all future requests\
+        \ to that application."
+      operationId: "createPspNzdPspApplication"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "application"
+        description: "Application details"
+        required: true
+        schema:
+          $ref: "#/definitions/PspNzdApplication"
+      responses:
+        201:
+          description: "Application created"
+          schema:
+            $ref: "#/definitions/Status"
+          headers:
+            location:
+              type: "string"
+              description: "url to reference application that has just created"
+              default: "/workflows/psp-nzd/applications/123"
+        400:
+          description: "Invalid request"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - api_key: []
+      x-swagger-router-controller: "CreditCardPaymentsPSPNZD"
+  /workflows/psp-nzd/applications/{applicationId}:
+    get:
+      tags:
+      - "Credit Card Payments (PSP NZD)"
+      description: "Retrieves a New Zealand PSP application referenced by the given\
+        \ applicationId."
+      operationId: "getPspNzdApplication"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "applicationId"
+        in: "path"
+        description: "The id of the application to retrieve"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Application retrieved"
+          schema:
+            $ref: "#/definitions/PspNzdApplication"
+        400:
+          description: "Invalid request"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Error"
+        404:
+          description: "Application not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - api_key: []
+      x-swagger-router-controller: "CreditCardPaymentsPSPNZD"
+    put:
+      tags:
+      - "Credit Card Payments (PSP NZD)"
+      description: "Updates a New Zealand PSP application referenced by the given\
+        \ applicationId."
+      operationId: "updatePspNzdApplication"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "applicationId"
+        in: "path"
+        description: "The id of the application to update"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "document"
+        description: "Application details"
+        required: true
+        schema:
+          $ref: "#/definitions/PspNzdApplication"
+      responses:
+        200:
+          description: "Application Updated."
+          schema:
+            $ref: "#/definitions/Status"
+        400:
+          description: "Invalid request"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Error"
+        404:
+          description: "Application not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - api_key: []
+      x-swagger-router-controller: "CreditCardPaymentsPSPNZD"
+  /workflows/psp-nzd/applications/{applicationId}/status:
+    put:
+      tags:
+      - "Credit Card Payments (PSP NZD)"
+      description: "Updates New Zealand PSP application status for the referenced\
+        \ applicationId. Returns the status of the application."
+      operationId: "updatePspNzdApplicationStatus"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "applicationId"
+        in: "path"
+        description: "The id of the application to update status for"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "status"
+        description: "The status details"
+        required: true
+        schema:
+          $ref: "#/definitions/Status"
+      responses:
+        200:
+          description: "Status Updated"
+          schema:
+            $ref: "#/definitions/Status"
+        400:
+          description: "Invalid request"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Error"
+        404:
+          description: "Application not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - api_key: []
+      x-swagger-router-controller: "CreditCardPaymentsPSPNZD"
+  /workflows/psp-nzd/terms/{partner}/{file_type}/version:
+    get:
+      tags:
+      - "Terms and Conditions (PSP NZD)"
+      description: "Returns latest version of T&Cs for a New Zealand PSP application."
+      operationId: "getPspNzdTermsVersion"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "partner"
+        in: "path"
+        description: "The name of the partner, if customized T&Cs have been agreed.\
+          \ Pass \"default\" for the default version of the document."
+        required: true
+        type: "string"
+      - name: "file_type"
+        in: "path"
+        description: "The format of the T&Cs document to be returned."
+        required: true
+        type: "string"
+        enum:
+        - "html"
+        - "pdf"
+      responses:
+        200:
+          description: "Document version info"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "Invalid request"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Error"
+        404:
+          description: "Document not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - api_key: []
+      x-swagger-router-controller: "TermsAndConditionsPSPNZD"
+  /workflows/psp-nzd/terms/{partner}/{file_type}/version/{version}:
+    get:
+      tags:
+      - "Terms and Conditions (PSP NZD)"
+      description: "Retrieves T&Cs for a New Zealand PSP application."
+      operationId: "getPspNzdTerms"
+      consumes:
+      - "application/json"
+      produces:
+      - "text/html"
+      - "application/pdf"
+      - "application/json"
+      parameters:
+      - name: "partner"
+        in: "path"
+        description: "The name of the partner, if customized T&Cs have been agreed.\
+          \ Pass \"default\" for the default version of the document."
+        required: true
+        type: "string"
+      - name: "file_type"
+        in: "path"
+        description: "The format of the T&Cs document to be returned."
+        required: true
+        type: "string"
+        enum:
+        - "html"
+        - "pdf"
+      - name: "version"
+        in: "path"
+        description: "The version of the document."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Document retrieved with identifing properties in HTTP header"
+          schema:
+            $ref: "#/definitions/inline_response_200_1"
+        400:
+          description: "Invalid request"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Error"
+        404:
+          description: "Document not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+      - api_key: []
+      x-swagger-router-controller: "TermsAndConditionsPSPNZD"
+securityDefinitions:
+  api_key:
+    description: "Pass the Authorization header in your request as \"Authorization:\
+      \ Token INSERT_KEY_HERE. Contact Beanstream to get an API Key generated for\
+      \ you if you don't have one."
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  PspNzdApplication:
+    type: "object"
+    required:
+    - "applicant"
+    - "business"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        description: "This application identifier is used to identify an application.\
+          \ [ReadOnly]"
+      merchant_id:
+        type: "integer"
+        description: "This merchant identifier is populated when the application is\
+          \ approved and a merchant account has been associated. [ReadOnly]"
+      status:
+        $ref: "#/definitions/Status"
+      applicant:
+        $ref: "#/definitions/PspNzdApplicant"
+      business:
+        $ref: "#/definitions/PspNzdBusiness"
+    description: "Defines a PSP New Zealander application"
+  PspNzdApplicant:
+    type: "object"
+    required:
+    - "address"
+    - "agreement"
+    - "date_of_birth"
+    - "document"
+    - "email"
+    - "first_name"
+    - "last_name"
+    - "phone_number"
+    - "title"
+    properties:
+      title:
+        type: "string"
+        maxLength: 4
+        enum:
+        - "Mr"
+        - "Miss"
+        - "Ms"
+        - "Mrs"
+        - "Mx"
+      first_name:
+        type: "string"
+        maxLength: 64
+      last_name:
+        type: "string"
+        maxLength: 64
+      date_of_birth:
+        type: "string"
+        format: "date-time"
+        description: "Defines the birthday in ISO 8601 format with a timezone"
+      phone_number:
+        type: "string"
+        maxLength: 15
+      agreement:
+        $ref: "#/definitions/Agreement"
+      address:
+        $ref: "#/definitions/Address"
+      email:
+        type: "string"
+        maxLength: 500
+      document:
+        $ref: "#/definitions/PspNzdFile"
+    description: "The individual completing the application"
+  PspNzdBusiness:
+    type: "object"
+    required:
+    - "address"
+    - "annual_sales"
+    - "average_monthly_sale"
+    - "bank_account"
+    - "business_industry"
+    - "business_number"
+    - "company_name"
+    - "entity_type"
+    - "legal_name"
+    - "merchant_category"
+    - "start_date"
+    properties:
+      company_name:
+        type: "string"
+        description: "Business Trading Name"
+        maxLength: 64
+      legal_name:
+        type: "string"
+        description: "Source data from ASIC/business check"
+        maxLength: 128
+      average_monthly_sale:
+        type: "number"
+        format: "float32"
+      annual_sales:
+        type: "number"
+        format: "float32"
+        description: "This is the annual sales volume in NZD."
+      merchant_category:
+        type: "string"
+        description: "This is the merchant category code"
+        enum:
+        - "0742"
+        - "0763"
+        - "0780"
+        - "1520"
+        - "1711"
+        - "1731"
+        - "1740"
+        - "1750"
+        - "1761"
+        - "1771"
+        - "1799"
+        - "2741"
+        - "2791"
+        - "2842"
+        - "3000-3299"
+        - "3351-3441"
+        - "3501-3790"
+        - "4011"
+        - "4111"
+        - "4112"
+        - "4119"
+        - "4121"
+        - "4131"
+        - "4214"
+        - "4215"
+        - "4225"
+        - "4411"
+        - "4457"
+        - "4468"
+        - "4511"
+        - "4582"
+        - "4722"
+        - "4723"
+        - "4784"
+        - "4789"
+        - "4812"
+        - "4814"
+        - "4816"
+        - "4821"
+        - "4829"
+        - "4899"
+        - "4900"
+        - "5013"
+        - "5021"
+        - "5039"
+        - "5044"
+        - "5045"
+        - "5046"
+        - "5047"
+        - "5051"
+        - "5065"
+        - "5072"
+        - "5074"
+        - "5085"
+        - "5094"
+        - "5099"
+        - "5111"
+        - "5122"
+        - "5131"
+        - "5137"
+        - "5139"
+        - "5169"
+        - "5172"
+        - "5192"
+        - "5193"
+        - "5198"
+        - "5199"
+        - "5200"
+        - "5211"
+        - "5231"
+        - "5251"
+        - "5261"
+        - "5271"
+        - "5300"
+        - "5309"
+        - "5310"
+        - "5311"
+        - "5331"
+        - "5399"
+        - "5411"
+        - "5422"
+        - "5441"
+        - "5451"
+        - "5462"
+        - "5499"
+        - "5511"
+        - "5521"
+        - "5531"
+        - "5532"
+        - "5533"
+        - "5541"
+        - "5542"
+        - "5551"
+        - "5561"
+        - "5571"
+        - "5592"
+        - "5598"
+        - "5599"
+        - "5611"
+        - "5621"
+        - "5631"
+        - "5641"
+        - "5651"
+        - "5655"
+        - "5661"
+        - "5681"
+        - "5691"
+        - "5697"
+        - "5698"
+        - "5699"
+        - "5712"
+        - "5713"
+        - "5714"
+        - "5718"
+        - "5719"
+        - "5722"
+        - "5732"
+        - "5733"
+        - "5734"
+        - "5735"
+        - "5811"
+        - "5812"
+        - "5813"
+        - "5814"
+        - "5912"
+        - "5921"
+        - "5931"
+        - "5932"
+        - "5933"
+        - "5935"
+        - "5937"
+        - "5940"
+        - "5941"
+        - "5942"
+        - "5943"
+        - "5944"
+        - "5945"
+        - "5946"
+        - "5947"
+        - "5948"
+        - "5949"
+        - "5950"
+        - "5960"
+        - "5962"
+        - "5963"
+        - "5964"
+        - "5965"
+        - "5966"
+        - "5967"
+        - "5968"
+        - "5969"
+        - "5970"
+        - "5971"
+        - "5972"
+        - "5973"
+        - "5975"
+        - "5976"
+        - "5977"
+        - "5978"
+        - "5983"
+        - "5992"
+        - "5993"
+        - "5994"
+        - "5995"
+        - "5996"
+        - "5997"
+        - "5998"
+        - "5999"
+        - "6010"
+        - "6011"
+        - "6012"
+        - "6051"
+        - "6211"
+        - "6300"
+        - "6399"
+        - "6513"
+        - "7011"
+        - "7012"
+        - "7032"
+        - "7033"
+        - "7210"
+        - "7211"
+        - "7216"
+        - "7217"
+        - "7221"
+        - "7230"
+        - "7251"
+        - "7261"
+        - "7273"
+        - "7276"
+        - "7277"
+        - "7278"
+        - "7296"
+        - "7297"
+        - "7298"
+        - "7299"
+        - "7311"
+        - "7321"
+        - "7333"
+        - "7338"
+        - "7339"
+        - "7342"
+        - "7349"
+        - "7361"
+        - "7372"
+        - "7375"
+        - "7379"
+        - "7392"
+        - "7393"
+        - "7394"
+        - "7395"
+        - "7399"
+        - "7511"
+        - "7512"
+        - "7513"
+        - "7519"
+        - "7523"
+        - "7531"
+        - "7534"
+        - "7535"
+        - "7538"
+        - "7542"
+        - "7549"
+        - "7622"
+        - "7623"
+        - "7629"
+        - "7631"
+        - "7641"
+        - "7692"
+        - "7699"
+        - "7829"
+        - "7832"
+        - "7841"
+        - "7911"
+        - "7922"
+        - "7929"
+        - "7932"
+        - "7933"
+        - "7941"
+        - "7991"
+        - "7992"
+        - "7993"
+        - "7994"
+        - "7995"
+        - "7996"
+        - "7997"
+        - "7998"
+        - "7999"
+        - "8011"
+        - "8021"
+        - "8031"
+        - "8041"
+        - "8042"
+        - "8043"
+        - "8049"
+        - "8050"
+        - "8062"
+        - "8071"
+        - "8099"
+        - "8111"
+        - "8211"
+        - "8220"
+        - "8241"
+        - "8244"
+        - "8249"
+        - "8299"
+        - "8351"
+        - "8398"
+        - "8641"
+        - "8651"
+        - "8661"
+        - "8675"
+        - "8699"
+        - "8734"
+        - "8911"
+        - "8931"
+        - "8999"
+        - "9211"
+        - "9222"
+        - "9223"
+        - "9311"
+        - "9399"
+        - "9402"
+        - "9405"
+        - "9950"
+      services_description:
+        type: "string"
+        description: "This is the description of the goods and/or services the merchant\
+          \ sells"
+        maxLength: 512
+      business_industry:
+        type: "string"
+        maxLength: 64
+      entity_type:
+        type: "string"
+        description: "This is the business entity type that maps to Legal Business\
+          \ Type"
+        enum:
+        - "sole_trader"
+        - "company"
+      website_url:
+        type: "string"
+        format: "uri"
+        maxLength: 128
+      start_date:
+        type: "string"
+        format: "date-time"
+        description: "This is the business start date in ISO 8601 format with a timezone"
+      business_number:
+        type: "string"
+        maxLength: 32
+      address:
+        $ref: "#/definitions/Address"
+      owners:
+        type: "array"
+        description: "Owners are required fields for Non-Profit entities"
+        items:
+          $ref: "#/definitions/PspNzdOwner"
+      bank_account:
+        $ref: "#/definitions/NewZealandBankAccount"
+    description: "The details of a New Zealand business"
+  PspNzdOwner:
+    type: "object"
+    required:
+    - "address"
+    - "business_role"
+    - "date_of_birth"
+    - "documents"
+    - "first_name"
+    - "last_name"
+    - "phone_number"
+    properties:
+      first_name:
+        type: "string"
+        maxLength: 64
+      last_name:
+        type: "string"
+        maxLength: 64
+      business_role:
+        type: "string"
+        maxLength: 64
+      date_of_birth:
+        type: "string"
+        format: "date-time"
+        description: "Defines the birthday in ISO 8601 format with a timezone"
+      phone_number:
+        type: "string"
+        maxLength: 15
+      address:
+        $ref: "#/definitions/Address"
+      documents:
+        type: "array"
+        description: "A maximum of three documents is allowed"
+        items:
+          $ref: "#/definitions/PspNzdFile"
+    description: "Defines a New Zealander business owner"
+  NewZealandBankAccount:
+    type: "object"
+    required:
+    - "account_number"
+    - "bsb"
+    - "owner_name"
+    properties:
+      currency:
+        type: "string"
+        description: "This is the currency of the bank account"
+        default: "NZD"
+      owner_name:
+        type: "string"
+        maxLength: 64
+      bsb:
+        type: "string"
+        pattern: "^\\d{6}$"
+      account_number:
+        type: "string"
+        pattern: "^\\d{9,10}$"
+    description: "Defines a New Zealand bank account"
+  PspNzdFile:
+    type: "object"
+    required:
+    - "base64"
+    - "name"
+    - "type"
+    properties:
+      name:
+        type: "string"
+        description: "Name of the document."
+        enum:
+        - "id_applicant"
+        - "bank_statement"
+        - "pci_saq_document"
+      type:
+        type: "string"
+        description: "File type of the document; accepted file formats."
+        enum:
+        - "jpg"
+        - "jpeg"
+        - "doc"
+        - "docx"
+        - "pdf"
+        - "png"
+      notes:
+        type: "string"
+        description: "Description of the document and the contents that it must contain."
+      base64:
+        type: "string"
+        description: "The document data, submitted as a base64 encoded string.."
+      uri:
+        type: "string"
+        description: "The URI that allows retrival of the documents using the GET\
+          \ /appplicatins/{id}/documents/{name}. [ReadOnly]"
+    description: "Defines a document that is required for application approval."
+  Status:
+    type: "object"
+    properties:
+      state:
+        type: "string"
+        description: "The state of the application. Possible values are \"in_progress\"\
+          , \"in_review\", \"rejected\", \"approved\""
+        enum:
+        - "in_progress"
+        - "in_review"
+        - "rejected"
+        - "approved"
+      created_on:
+        type: "string"
+        format: "date-time"
+        description: "Defines the date when the application was created in ISO 8601\
+          \ format with a timezone [ReadOnly]"
+      updated_on:
+        type: "string"
+        format: "date-time"
+        description: "Defines the date when the application was modified in  ISO 8601\
+          \ format with a timezone [ReadOnly]"
+      pending_issues:
+        type: "array"
+        items:
+          $ref: "#/definitions/Error"
+    description: "Defines information about the application. [ReadOnly]"
+  Agreement:
+    type: "object"
+    required:
+    - "name"
+    - "timestamp"
+    - "version"
+    properties:
+      name:
+        type: "string"
+        description: "Defines the name of the agreement"
+      version:
+        type: "string"
+        description: "Defines the version of the agreement"
+      timestamp:
+        type: "string"
+        format: "date-time"
+        description: "Defines the date of the application terms and conditions agreeent\
+          \ in ISO 8601 format with a timezone [ReadOnly]"
+    description: "Defines an terms and conditions agreement between a merchant and\
+      \ IPP Payments"
+  Error:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "A field associated with the error"
+      reason:
+        type: "string"
+        description: "A code associated with the error"
+      message:
+        type: "string"
+        description: "A human readable message about the error"
+    description: "Defines an error"
+  Address:
+    type: "object"
+    required:
+    - "address_line1"
+    - "city"
+    - "country"
+    properties:
+      address_line1:
+        type: "string"
+        maxLength: 64
+      address_line2:
+        type: "string"
+        maxLength: 64
+      city:
+        type: "string"
+        maxLength: 64
+      region:
+        type: "string"
+        description: "State/Province/Municipality/Region"
+        maxLength: 64
+      country:
+        type: "string"
+        description: "Valid ISO 3166-1 country code for US, CA, GB, or a European\
+          \ country"
+        enum:
+        - "AD"
+        - "AE"
+        - "AF"
+        - "AG"
+        - "AI"
+        - "AL"
+        - "AM"
+        - "AO"
+        - "AQ"
+        - "AR"
+        - "AS"
+        - "AT"
+        - "AU"
+        - "AW"
+        - "AX"
+        - "AZ"
+        - "BA"
+        - "BB"
+        - "BD"
+        - "BE"
+        - "BF"
+        - "BG"
+        - "BH"
+        - "BI"
+        - "BJ"
+        - "BL"
+        - "BM"
+        - "BN"
+        - "BO"
+        - "BQ"
+        - "BR"
+        - "BS"
+        - "BT"
+        - "BV"
+        - "BW"
+        - "BY"
+        - "BZ"
+        - "CA"
+        - "CC"
+        - "CD"
+        - "CF"
+        - "CG"
+        - "CH"
+        - "CI"
+        - "CK"
+        - "CL"
+        - "CM"
+        - "CN"
+        - "CO"
+        - "CR"
+        - "CU"
+        - "CV"
+        - "CW"
+        - "CX"
+        - "CY"
+        - "CZ"
+        - "DE"
+        - "DJ"
+        - "DK"
+        - "DM"
+        - "DO"
+        - "DZ"
+        - "EC"
+        - "EE"
+        - "EG"
+        - "EH"
+        - "ER"
+        - "ES"
+        - "ET"
+        - "FI"
+        - "FJ"
+        - "FK"
+        - "FM"
+        - "FO"
+        - "FR"
+        - "GA"
+        - "GB"
+        - "GD"
+        - "GE"
+        - "GF"
+        - "GG"
+        - "GH"
+        - "GI"
+        - "GL"
+        - "GM"
+        - "GN"
+        - "GP"
+        - "GQ"
+        - "GR"
+        - "GS"
+        - "GT"
+        - "GU"
+        - "GW"
+        - "GY"
+        - "HK"
+        - "HM"
+        - "HN"
+        - "HR"
+        - "HT"
+        - "HU"
+        - "ID"
+        - "IE"
+        - "IL"
+        - "IM"
+        - "IN"
+        - "IO"
+        - "IQ"
+        - "IR"
+        - "IS"
+        - "IT"
+        - "JE"
+        - "JM"
+        - "JO"
+        - "JP"
+        - "KE"
+        - "KG"
+        - "KH"
+        - "KI"
+        - "KM"
+        - "KN"
+        - "KP"
+        - "KR"
+        - "KW"
+        - "KY"
+        - "KZ"
+        - "LA"
+        - "LB"
+        - "LC"
+        - "LI"
+        - "LK"
+        - "LR"
+        - "LS"
+        - "LT"
+        - "LU"
+        - "LV"
+        - "LY"
+        - "MA"
+        - "MC"
+        - "MD"
+        - "ME"
+        - "MF"
+        - "MG"
+        - "MH"
+        - "MK"
+        - "ML"
+        - "MM"
+        - "MN"
+        - "MO"
+        - "MP"
+        - "MQ"
+        - "MR"
+        - "MS"
+        - "MT"
+        - "MU"
+        - "MV"
+        - "MW"
+        - "MX"
+        - "MY"
+        - "MZ"
+        - "NA"
+        - "NC"
+        - "NE"
+        - "NF"
+        - "NG"
+        - "NI"
+        - "NL"
+        - "NO"
+        - "NP"
+        - "NR"
+        - "NU"
+        - "NZ"
+        - "OM"
+        - "PA"
+        - "PE"
+        - "PF"
+        - "PG"
+        - "PH"
+        - "PK"
+        - "PL"
+        - "PM"
+        - "PN"
+        - "PR"
+        - "PS"
+        - "PT"
+        - "PW"
+        - "PY"
+        - "QA"
+        - "RE"
+        - "RO"
+        - "RS"
+        - "RU"
+        - "RW"
+        - "SA"
+        - "SB"
+        - "SC"
+        - "SD"
+        - "SE"
+        - "SG"
+        - "SH"
+        - "SI"
+        - "SJ"
+        - "SK"
+        - "SL"
+        - "SM"
+        - "SN"
+        - "SO"
+        - "SR"
+        - "SS"
+        - "ST"
+        - "SV"
+        - "SX"
+        - "SY"
+        - "SZ"
+        - "TC"
+        - "TD"
+        - "TF"
+        - "TG"
+        - "TH"
+        - "TJ"
+        - "TK"
+        - "TL"
+        - "TM"
+        - "TN"
+        - "TO"
+        - "TR"
+        - "TT"
+        - "TV"
+        - "TW"
+        - "TZ"
+        - "UA"
+        - "UG"
+        - "UM"
+        - "US"
+        - "UY"
+        - "UZ"
+        - "VA"
+        - "VC"
+        - "VE"
+        - "VG"
+        - "VI"
+        - "VN"
+        - "VU"
+        - "WF"
+        - "WS"
+        - "YE"
+        - "YT"
+        - "ZA"
+        - "ZM"
+        - "ZW"
+      postal_code:
+        type: "string"
+        description: "Postal/Zip code"
+        maxLength: 7
+    description: "Defines a generic address"
+  inline_response_200:
+    properties:
+      version:
+        type: "string"
+        description: "Defines the version of the document returned."
+      name:
+        type: "string"
+        format: "flow/partner_date:time"
+        description: "Defines the name of the document returned."
+    description: "Defines information about the document."
+  inline_response_200_1:
+    properties:
+      X-Version:
+        type: "string"
+        description: "Defines the version of the document returned."
+      X-Name:
+        type: "string"
+        format: "flow/partner_date:time"
+        description: "Defines the name of the document returned."
+    description: "Defines information about the document. [HTTP header]"
