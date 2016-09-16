@@ -75,7 +75,7 @@ paths:
           schema:
             $ref: "#/definitions/Status"
           headers:
-            location:
+            Location:
               type: "string"
               description: "url to reference application that has just created"
               default: "/workflows/psp-nzd/applications/123"
@@ -325,27 +325,7 @@ securityDefinitions:
     in: "header"
 definitions:
   PspNzdApplication:
-    type: "object"
-    required:
-    - "applicant"
-    - "business"
-    properties:
-      id:
-        type: "integer"
-        format: "int32"
-        description: "This application identifier is used to identify an application.\
-          \ [ReadOnly]"
-      merchant_id:
-        type: "integer"
-        description: "This merchant identifier is populated when the application is\
-          \ approved and a merchant account has been associated. [ReadOnly]"
-      status:
-        $ref: "#/definitions/Status"
-      applicant:
-        $ref: "#/definitions/PspNzdApplicant"
-      business:
-        $ref: "#/definitions/PspNzdBusiness"
-    description: "Defines a PSP New Zealander application"
+    type: "object"    
   PspNzdApplicant:
     type: "object"
     required:

@@ -1,12 +1,14 @@
 'use strict';
 
 var app = require('connect')();
+var cors = require('cors')
 var http = require('http');
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var fs = require('fs');
 var serverPort = 8080;
 
+app.use(cors());
 // swaggerRouter configuration
 var options = {
   swaggerUi: '/swagger.json',

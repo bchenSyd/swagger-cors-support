@@ -18,6 +18,9 @@ exports.createPspNzdPspApplication = function(args, res, next) {
 };
   if(Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Location', '/workflows/psp-nzd/applications/123');
+    res.setHeader('Access-Control-Expose-Headers', 'Location');
+    
     res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
   }
   else {
