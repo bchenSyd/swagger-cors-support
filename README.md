@@ -21,3 +21,20 @@ open http://localhost:8080/docs
 ```
 
 This project leverages the mega-awesome [swagger-tools](https://github.com/apigee-127/swagger-tools) middleware which does most all the work.
+
+
+```
+
+    static function OnBeforeResponse(oSession: Session) {
+        if (m_Hide304s && oSession.responseCode == 304) {
+            oSession["ui-hide"] = "true";
+        }
+        
+
+        cors: domain = protocal+ ip+ portNum
+        oSession.oResponse["Access-Control-Allow-Origin"] = "http://10.100.50.37:3001"; //"*";//"10.100.50.37:3001" won't work. 
+        oSession.oResponse["Access-Control-Allow-Headers"] = "Origin, X-Requested-With, Content-Type, Accept"; 
+
+        
+    }
+```
