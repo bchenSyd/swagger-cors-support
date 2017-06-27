@@ -1,0 +1,18 @@
+{
+  "plugins": [
+    "transform-runtime",
+    "transform-object-rest-spread"
+  ],
+  "presets": [
+    "env",
+    "es2015",
+    "babel-preset-flow"
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        "babili"
+      ]
+    }
+  }
+} 

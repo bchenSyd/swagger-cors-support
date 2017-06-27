@@ -1,0 +1,19 @@
+{
+  // must NOT have this becuase wx doesn't have babel-runtime enabled
+  // "plugins": [
+  //   "transform-runtime"
+  // ],
+  "presets": [
+    "env",
+    "es2015",
+    "babel-preset-flow"
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        "babili"
+      ]
+    }
+  },
+  "plugins": ["transform-object-rest-spread"]  // in stage-3 see:https://github.com/babel/babel/commit/efa0affea193a6ad4d9035a4292cff0d78b97376
+} 
