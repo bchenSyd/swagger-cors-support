@@ -16,7 +16,7 @@ paths:
   /account/login:
     post:
       tags:
-      - "RFC:Authorization Code Grant"
+      - "Authorization Code Grant access_token"
       description: "mysite.com redirect to qq.com >  (qq.com) username & password --> auth code \
                     qq.com redirect to mysite.com >  client_id & client_secret --> qq.com --> access_token"
       operationId: "login"

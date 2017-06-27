@@ -5,8 +5,7 @@
   ],
   "presets": [
     "env",
-    "es2015",
-    "babel-preset-flow"
+    "es2015"
   ],
   "env": {
     "production": {
