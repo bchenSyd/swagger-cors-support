@@ -7,17 +7,26 @@ var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
 var fs = require('fs');
 var serverPort = 8080;
+var bodyParser = require('body-parser');
+
 
 app.use(cors());
 // swaggerRouter configuration
+console.log(`env: ${process.env.NODE_ENV}`);
 var options = {
   swaggerUi: '/swagger.json',
-  controllers: './controllers',
-  useStubs: process.env.NODE_ENV  === 'production' ? false: true // Conditionally turn on stubs (mock mode)
+  controllers: './src/controllers',
+  // process.env.NODE_ENV === 'production' ? false : true // Conditionally turn on stubs (mock mode)
+  useStubs: false // true to skip your implementation and use randomly generated value based on yml file
 };
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 // The Swagger document (require it, build it programmatically, fetch it from a URL, ...)
-var spec = fs.readFileSync('./api/swagger.yaml', 'utf8');
+var spec = fs.readFileSync('./src/api/swagger.yaml', 'utf8');
 var swaggerDoc = jsyaml.safeLoad(spec);
 
 // Initialize the Swagger middleware
